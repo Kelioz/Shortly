@@ -4,28 +4,14 @@
 
 Node.js, Express, TypeScript, Prisma, PostgreSQL, Redis, Zod, Swagger UI и Morgan.
 
-## Локальный запуск
-
-1. Установите зависимости: `npm install`.
-2. Скопируйте `.env.example` в `.env` и укажите подключения к PostgreSQL и Redis.
-3. Сгенерируйте Prisma Client и примените миграции:
-
-```bash
-npm run prisma:generate
-npx prisma migrate deploy
-```
-
-4. Запустите сервер: `npm run dev`.
-
-Swagger UI доступен по адресу `http://localhost:3000/docs`, JSON-описание API —
-`http://localhost:3000/docs.json`.
-
 ## Docker Compose
 
-Docker Compose поднимает PostgreSQL, Redis и backend. Миграции Prisma применяются
+Docker Compose поднимает PostgreSQL, Redis, backend и frontend. Миграции Prisma применяются
 автоматически перед запуском backend:
 
 ```bash
+cd .\backend
+
 docker compose up --build
 ```
 
@@ -64,10 +50,10 @@ curl http://localhost:3000/api/stats/abc123
 
 ## Переменные окружения
 
-| Переменная | Назначение | Значение по умолчанию |
-| --- | --- | --- |
-| `DATABASE_URL` | Строка подключения Prisma к PostgreSQL | — |
-| `REDIS_URL` | Строка подключения к Redis | — |
-| `PORT` | Порт HTTP-сервера | `3000` |
-| `BASE_URL` | Базовый URL для результата сокращения | `http://localhost:3000` |
-| `REDIS_TTL_SECONDS` | TTL URL в Redis | `3600` |
+| Переменная          | Назначение                             | Значение по умолчанию   |
+| ------------------- | -------------------------------------- | ----------------------- |
+| `DATABASE_URL`      | Строка подключения Prisma к PostgreSQL | —                       |
+| `REDIS_URL`         | Строка подключения к Redis             | —                       |
+| `PORT`              | Порт HTTP-сервера                      | `3000`                  |
+| `BASE_URL`          | Базовый URL для результата сокращения  | `http://localhost:3000` |
+| `REDIS_TTL_SECONDS` | TTL URL в Redis                        | `3600`                  |
