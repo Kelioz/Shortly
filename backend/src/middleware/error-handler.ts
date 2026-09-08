@@ -1,6 +1,6 @@
 import { ErrorRequestHandler } from "express";
 import { ZodError } from "zod";
-import { NotFoundError } from "../services/url.service";
+import { CyclicRedirectError, NotFoundError } from "../services/url.service";
 
 export const errorHandler: ErrorRequestHandler = (error, _request, response, _next) => {
   if (error instanceof ZodError) {
@@ -13,6 +13,11 @@ export const errorHandler: ErrorRequestHandler = (error, _request, response, _ne
 
   if (error instanceof NotFoundError) {
     response.status(404).json({ error: error.message });
+    return;
+  }
+
+  if (error instanceof CyclicRedirectError) {
+    response.status(400).json({ error: error.message });
     return;
   }
 

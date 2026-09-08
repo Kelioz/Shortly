@@ -40,6 +40,7 @@ export const openApiDocument = {
         parameters: [{ $ref: "#/components/parameters/ShortCode" }],
         responses: {
           "302": { description: "Redirect to the original URL" },
+          "400": { $ref: "#/components/responses/BadRequest" },
           "404": { $ref: "#/components/responses/NotFound" },
         },
       },

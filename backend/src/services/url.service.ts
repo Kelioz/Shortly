@@ -14,6 +14,13 @@ export class NotFoundError extends Error {
   }
 }
 
+export class CyclicRedirectError extends Error {
+  constructor() {
+    super("Redirect target cannot point to the same short URL");
+    this.name = "CyclicRedirectError";
+  }
+}
+
 export class UrlService {
   constructor(private readonly repository = new UrlRepository()) {}
 
@@ -48,8 +55,16 @@ export class UrlService {
         throw new NotFoundError();
       }
       originalUrl = url.originalUrl;
-      await redis.setex(cacheKey, env.REDIS_TTL_SECONDS, originalUrl);
+      await redis.setex(cacheKey, env.REDIS_TTL_SECONDS, url.originalUrl);
       console.info(`URL cache miss: ${shortCode}`);
+    }
+
+    if (!originalUrl) {
+      throw new NotFoundError();
+    }
+
+    if (this.isCyclicRedirect(originalUrl, shortCode)) {
+      throw new CyclicRedirectError();
     }
 
     await this.repository.incrementClicks(shortCode);
@@ -79,6 +94,21 @@ export class UrlService {
 
   private cacheKey(shortCode: string): string {
     return `url:${shortCode}`;
+  }
+
+  private isCyclicRedirect(originalUrl: string, shortCode: string): boolean {
+    try {
+      const target = new URL(originalUrl);
+      const base = new URL(env.BASE_URL);
+      return (
+        target.origin === base.origin &&
+        target.pathname.replace(/\/+$/, "") === `/${shortCode}` &&
+        !target.search &&
+        !target.hash
+      );
+    } catch {
+      return false;
+    }
   }
 
   private isUniqueViolation(error: unknown): boolean {
