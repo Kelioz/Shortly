@@ -32,6 +32,7 @@ docker compose up --build
 После запуска:
 
 - API: `http://localhost:3000`
+- Frontend: `http://localhost:5173`
 - Swagger: `http://localhost:3000/docs`
 - PostgreSQL: `localhost:5432`
 - Redis: `localhost:6379`

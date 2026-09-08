@@ -1,0 +1,85 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "URL Shortener API",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "http://localhost:3000" }],
+  "paths": {
+    "/api/shorten": {
+      "post": {
+        "operationId": "createShortUrl",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ShortenRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ShortenResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stats/{shortCode}": {
+      "get": {
+        "operationId": "getShortUrlStats",
+        "parameters": [
+          {
+            "name": "shortCode",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "pattern": "^[A-Za-z0-9]{6,10}$" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Statistics",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StatsResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ShortenRequest": {
+        "type": "object",
+        "required": ["originalUrl"],
+        "properties": {
+          "originalUrl": { "type": "string", "format": "uri" }
+        }
+      },
+      "ShortenResponse": {
+        "type": "object",
+        "required": ["shortCode", "shortUrl"],
+        "properties": {
+          "shortCode": { "type": "string" },
+          "shortUrl": { "type": "string", "format": "uri" }
+        }
+      },
+      "StatsResponse": {
+        "type": "object",
+        "required": ["originalUrl", "shortCode", "clicks", "createdAt"],
+        "properties": {
+          "originalUrl": { "type": "string", "format": "uri" },
+          "shortCode": { "type": "string" },
+          "clicks": { "type": "integer" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

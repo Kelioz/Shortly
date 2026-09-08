@@ -1,0 +1,31 @@
+.card {
+  height: 100%;
+}
+
+.heading {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.75rem;
+
+  h3 {
+    margin: 0 0 0.25rem;
+  }
+}
+
+.icon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: #fff;
+  background: #12a594;
+  border-radius: 0.75rem;
+  place-items: center;
+  font-size: 1.25rem;
+}
+
+.stats {
+  padding-top: 1.25rem;
+  margin-top: 1.25rem;
+  border-top: 1px solid #edf0f5;
+}
