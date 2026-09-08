@@ -1,4 +1,4 @@
-# URL Shortener Backend
+# URL Shortener
 
 ## Технологии
 
@@ -22,18 +22,6 @@ docker compose up --build
 - Swagger: `http://localhost:3000/docs`
 - PostgreSQL: `localhost:5432`
 - Redis: `localhost:6379`
-
-Для остановки контейнеров:
-
-```bash
-docker compose down
-```
-
-Для удаления данных PostgreSQL и Redis:
-
-```bash
-docker compose down -v
-```
 
 ## API
 
