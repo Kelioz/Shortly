@@ -29,9 +29,9 @@ export function ShortenUrlForm() {
   }
 
   return (
-    <Card className={styles.card} variant='borderless'>
-      <div className={styles.heading}>
-        <span className={styles.icon}>
+    <Card className={styles.root__card} variant='borderless'>
+      <div className={styles.root__heading}>
+        <span className={styles.root__icon}>
           <ThunderboltOutlined />
         </span>
         <div>
@@ -73,11 +73,11 @@ export function ShortenUrlForm() {
         </Button>
       </Form>
       {shortUrl && (
-        <div className={styles.result}>
+        <div className={styles.root__result}>
           <Typography.Text type='secondary'>
             Ваша короткая ссылка
           </Typography.Text>
-          <div className={styles.resultRow}>
+          <div className={styles.root__resultRow}>
             <a href={shortUrl} target='_blank' rel='noreferrer'>
               {shortUrl}
             </a>

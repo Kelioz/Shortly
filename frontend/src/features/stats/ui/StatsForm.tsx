@@ -25,9 +25,9 @@ export function StatsForm() {
   }
 
   return (
-    <Card className={styles.card} variant='borderless'>
-      <div className={styles.heading}>
-        <span className={styles.icon}>
+    <Card className={styles.root__card} variant='borderless'>
+      <div className={styles.root__heading}>
+        <span className={styles.root__icon}>
           <BarChartOutlined />
         </span>
         <div>
@@ -60,7 +60,7 @@ export function StatsForm() {
         </Button>
       </Form>
       {data.data && (
-        <Descriptions className={styles.stats} column={1} size='small'>
+        <Descriptions className={styles.root__stats} column={1} size='small'>
           <Descriptions.Item label='Оригинальный URL'>
             <a href={data.data.originalUrl} target='_blank' rel='noreferrer'>
               {data.data.originalUrl}
@@ -75,7 +75,7 @@ export function StatsForm() {
         </Descriptions>
       )}
       {data.error && (
-        <Descriptions className={styles.stats} column={1} size='small'>
+        <Descriptions className={styles.root__stats} column={1} size='small'>
           <Descriptions.Item label='Переходы'>
             {data.error?.message}
           </Descriptions.Item>
