@@ -1,10 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import * as Api from "./Api";
-import { Config } from "../config/config";
 
-export const AXIOS_INSTANCE = axios.create({
-  baseURL: Config.API_URL,
-});
+export const AXIOS_INSTANCE = axios.create();
 export const customInstance = <T>(
   config: AxiosRequestConfig,
 

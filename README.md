@@ -26,7 +26,6 @@ docker compose up --build
 Установите и запустите PostgreSQL и Redis локально, затем создайте файлы окружения:
 
 - backend: [backend/.env.example](backend/.env.example) → `backend/.env`
-- frontend: [frontend/.env.example](frontend/.env.example) → `frontend/.env`
 
 Запуск backend:
 
@@ -43,10 +42,14 @@ npm run dev
 
 ```bash
 cd .\frontend
-cp .env.example .env
 npm install
 npm run dev
 ```
+
+Frontend отправляет API-запросы по относительному пути `/api`. В Docker nginx
+проксирует эти запросы на backend, а короткие ссылки вида
+`http://localhost:3000/abc123` ведут напрямую на backend и не проходят через
+frontend/nginx.
 
 ## API
 

@@ -102,7 +102,7 @@ describe("URL API", () => {
   it("regenerates the code after a unique collision", async () => {
     const collision = new Prisma.PrismaClientKnownRequestError("Unique constraint", {
       code: "P2002",
-      clientVersion: "6.19.3",
+      clientVersion: "6.15.0",
     });
     create
       .mockRejectedValueOnce(collision)

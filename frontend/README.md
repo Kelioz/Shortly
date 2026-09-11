@@ -11,8 +11,8 @@ npm run dev
 ```
 
 The Vite dev server runs on `http://localhost:5173` and proxies `/api` to the
-backend at `http://localhost:3000`. To use another API URL, copy `.env.example`
-to `.env` and set `VITE_API_URL`.
+backend at `http://localhost:3000`. API requests use the relative `/api` path,
+so no frontend environment variables are required.
 
 ## Architecture
 
