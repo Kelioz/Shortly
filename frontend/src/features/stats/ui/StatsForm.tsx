@@ -1,5 +1,14 @@
 import { BarChartOutlined, SearchOutlined } from '@ant-design/icons'
-import { App, Button, Card, Descriptions, Form, Input, Typography } from 'antd'
+import {
+  App,
+  Button,
+  Card,
+  Descriptions,
+  Form,
+  Input,
+  Spin,
+  Typography,
+} from 'antd'
 import { useEffect, useState } from 'react'
 import { getApiErrorMessage } from '../../../shared/lib/api-error'
 import styles from './StatsForm.module.scss'
@@ -19,9 +28,15 @@ export function StatsForm() {
     }
   }, [message, data.error])
 
-  const submit = ({ shortCode: value }: FormValues) => {
-    setShortCode(value.trim())
-    if (shortCode) data.refetch()
+  const submit = async ({ shortCode: value }: FormValues) => {
+    const nextShortCode = value.trim()
+
+    if (nextShortCode === shortCode) {
+      await data.refetch()
+      return
+    }
+
+    setShortCode(nextShortCode)
   }
 
   return (
@@ -44,8 +59,8 @@ export function StatsForm() {
           rules={[
             { required: true, message: 'Введите короткий код' },
             {
-              pattern: /^[A-Za-z0-9]{6,10}$/,
-              message: '6–10 латинских букв или цифр',
+              pattern: /^[A-Za-z0-9]{6}$/,
+              message: '6 латинских букв или цифр',
             },
           ]}
         >
@@ -55,11 +70,17 @@ export function StatsForm() {
             placeholder='abc123'
           />
         </Form.Item>
-        <Button type='default' htmlType='submit' size='large'>
+        <Button
+          type='default'
+          htmlType='submit'
+          size='large'
+          loading={data.isFetching}
+        >
           Получить статистику
         </Button>
       </Form>
-      {data.data && (
+
+      {data.data && !data.isFetching && (
         <Descriptions className={styles.root__stats} column={1} size='small'>
           <Descriptions.Item label='Оригинальный URL'>
             <a href={data.data.originalUrl} target='_blank' rel='noreferrer'>
@@ -71,13 +92,6 @@ export function StatsForm() {
           </Descriptions.Item>
           <Descriptions.Item label='Создана'>
             {new Date(data.data.createdAt).toLocaleString('ru-RU')}
-          </Descriptions.Item>
-        </Descriptions>
-      )}
-      {data.error && (
-        <Descriptions className={styles.root__stats} column={1} size='small'>
-          <Descriptions.Item label='Переходы'>
-            {data.error?.message}
           </Descriptions.Item>
         </Descriptions>
       )}

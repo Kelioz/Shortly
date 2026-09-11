@@ -1,4 +1,5 @@
 import request from "supertest";
+import { Prisma } from "@prisma/client";
 
 const redisGet = jest.fn();
 const redisSetex = jest.fn();
@@ -75,6 +76,58 @@ describe("URL API", () => {
       data: { clicks: { increment: 1 } },
     });
     expect(findByShortCode).not.toHaveBeenCalled();
+  });
+
+  it("loads a URL from the database and caches it on a cache miss", async () => {
+    redisGet.mockResolvedValue(null);
+    findByShortCode.mockResolvedValue({
+      originalUrl: "https://example.com/from-db",
+      shortCode: "abc123",
+    });
+
+    const response = await request(app).get("/abc123").redirects(0);
+
+    expect(response.status).toBe(302);
+    expect(findByShortCode).toHaveBeenCalledWith({
+      where: { shortCode: "abc123" },
+    });
+    expect(redisSetex).toHaveBeenCalledWith(
+      "url:abc123",
+      3600,
+      "https://example.com/from-db",
+    );
+    expect(incrementClicks).toHaveBeenCalled();
+  });
+
+  it("regenerates the code after a unique collision", async () => {
+    const collision = new Prisma.PrismaClientKnownRequestError("Unique constraint", {
+      code: "P2002",
+      clientVersion: "6.19.3",
+    });
+    create
+      .mockRejectedValueOnce(collision)
+      .mockResolvedValueOnce({ shortCode: "def456" });
+
+    const randomSpy = jest
+      .spyOn(Math, "random")
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(0)
+      .mockReturnValue(0.1);
+
+    const response = await request(app)
+      .post("/api/shorten")
+      .send({ originalUrl: "https://example.com/collision" });
+
+    randomSpy.mockRestore();
+    expect(response.status).toBe(201);
+    expect(create).toHaveBeenCalledTimes(2);
+    expect(create.mock.calls[0][0].data.shortCode).not.toBe(
+      create.mock.calls[1][0].data.shortCode,
+    );
   });
 
   it("rejects a redirect target pointing back to the same short URL", async () => {

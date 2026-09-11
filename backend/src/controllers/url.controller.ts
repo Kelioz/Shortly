@@ -12,7 +12,7 @@ const shortenSchema = z.object({
   ),
 });
 
-const shortCodeSchema = z.string().regex(/^[A-Za-z0-9]{6,10}$/);
+const shortCodeSchema = z.string().regex(/^[A-Za-z0-9]{6}$/);
 
 export class UrlController {
   constructor(private readonly service = new UrlService()) {}

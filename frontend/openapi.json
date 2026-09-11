@@ -37,7 +37,7 @@
             "name": "shortCode",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "pattern": "^[A-Za-z0-9]{6,10}$" }
+            "schema": { "type": "string", "pattern": "^[A-Za-z0-9]{6}$" }
           }
         ],
         "responses": {

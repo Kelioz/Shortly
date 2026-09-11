@@ -70,7 +70,7 @@ export const openApiDocument = {
         name: "shortCode",
         in: "path",
         required: true,
-        schema: { type: "string", pattern: "^[A-Za-z0-9]{6,10}$", example: "abc123" },
+        schema: { type: "string", pattern: "^[A-Za-z0-9]{6}$", example: "abc123" },
       },
     },
     schemas: {

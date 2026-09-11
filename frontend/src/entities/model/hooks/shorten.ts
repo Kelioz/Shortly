@@ -1,4 +1,4 @@
-import { useMutation, useQueries } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { apiClient } from '../../../shared/api'
 import {
   ShortenRequest,

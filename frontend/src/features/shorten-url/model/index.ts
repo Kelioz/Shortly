@@ -1,6 +1,7 @@
 import { App, notification } from 'antd'
 import { URLModel } from '../../../entities'
 import { AxiosError } from 'axios'
+import { getApiErrorMessage } from '../../../shared/lib/api-error'
 import { TMutationParameters } from '../../../shared/lib/utils/mutations'
 import { ShortenResponse } from '../../../shared/api/Api.schemas'
 
@@ -13,9 +14,8 @@ export function useCreateShortenModel(
     props.onSuccess && props.onSuccess(data)
   }
   const onError = (error: AxiosError) => {
-    const message = error.message
     notification.error({
-      message: message || 'Произошла непредвиденная ошибка',
+      message: getApiErrorMessage(error, 'Не удалось создать короткую ссылку'),
     })
 
     props.onError && props.onError(error)

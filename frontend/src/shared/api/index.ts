@@ -20,11 +20,11 @@ export const customInstance = <T>(
     cancelToken: source.token,
   }).then(({ data }) => data);
 
-  // @ts-expect-error any
-  promise.cancel = () => {
+  const cancellablePromise = promise as Promise<T> & { cancel: () => void };
+  cancellablePromise.cancel = () => {
     source.cancel("Query was cancelled");
   };
 
-  return promise;
+  return cancellablePromise;
 };
 export const apiClient = Api;

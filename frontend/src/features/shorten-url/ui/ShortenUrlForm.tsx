@@ -5,6 +5,7 @@ import {
 } from '@ant-design/icons'
 import { App, Button, Card, Form, Input, Typography } from 'antd'
 import { useState } from 'react'
+import { getApiErrorMessage } from '../../../shared/lib/api-error'
 import styles from './ShortenUrlForm.module.scss'
 import { useCreateShortenModel } from '../model'
 
@@ -24,8 +25,12 @@ export function ShortenUrlForm() {
 
   const copyShortUrl = async () => {
     if (!shortUrl) return
-    message.success('Ссылка скопирована')
-    await navigator.clipboard.writeText(shortUrl)
+    try {
+      await navigator.clipboard.writeText(shortUrl)
+      message.success('Ссылка скопирована')
+    } catch (error) {
+      message.error(getApiErrorMessage(error, 'Не удалось скопировать ссылку'))
+    }
   }
 
   return (
