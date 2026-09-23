@@ -5,7 +5,7 @@ export const openApiDocument = {
     version: "1.0.0",
     description: "API для создания коротких ссылок и просмотра статистики переходов.",
   },
-  servers: [{ url: "http://localhost:3000", description: "Local server" }],
+  servers: [{ url: "http://localhost", description: "Docker gateway" }],
   tags: [{ name: "URLs", description: "Short URL operations" }],
   paths: {
     "/api/shorten": {
@@ -90,7 +90,7 @@ export const openApiDocument = {
         required: ["shortCode", "shortUrl"],
         properties: {
           shortCode: { type: "string", example: "abc123" },
-          shortUrl: { type: "string", format: "uri", example: "http://localhost:3000/abc123" },
+          shortUrl: { type: "string", format: "uri", example: "http://localhost/abc123" },
         },
       },
       StatsResponse: {
