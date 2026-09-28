@@ -23,8 +23,9 @@ docker compose up --build
 
 В Docker наружу опубликован только стандартный HTTP-порт `80`:
 `http://localhost`. Nginx проксирует API, Swagger и короткие ссылки во
-внутренний backend-контейнер. Локальный Vite-сервер без Docker запускается
-отдельно командой `npm run dev`.
+внутренний backend-контейнер. Для этого режима Compose задаёт backend
+`BASE_URL=http://localhost`, чтобы создаваемые короткие ссылки открывались через
+nginx.
 
 ## Локальный запуск без Docker
 
@@ -51,10 +52,16 @@ npm install
 npm run dev
 ```
 
-Frontend отправляет API-запросы по относительному пути `/api`. В Docker nginx
-проксирует эти запросы и короткие ссылки через внутренний backend-контейнер.
+Локальный frontend доступен по адресу `http://localhost:5173` и отправляет API
+запросы через Vite proxy на backend `http://localhost:3000`. В локальном режиме
+backend использует `BASE_URL=http://localhost:3000` из `backend/.env.example`,
+поэтому короткие ссылки ведут напрямую на backend. Не заменяйте это значение
+на Docker-адрес `http://localhost`, если запускаете frontend через Vite.
 
 ## API
+
+Примеры ниже относятся к Docker Compose, где frontend/nginx доступен на
+`http://localhost`:
 
 ```bash
 curl -X POST http://localhost/api/shorten \
@@ -63,6 +70,17 @@ curl -X POST http://localhost/api/shorten \
 
 curl -i http://localhost/abc123
 curl http://localhost/api/stats/abc123
+```
+
+При локальном запуске без Docker обращайтесь напрямую к backend на порту `3000`:
+
+```bash
+curl -X POST http://localhost:3000/api/shorten \
+  -H "Content-Type: application/json" \
+  -d "{\"originalUrl\":\"https://example.com\"}"
+
+curl -i http://localhost:3000/abc123
+curl http://localhost:3000/api/stats/abc123
 ```
 
 Пример ответа `POST /api/shorten`:
@@ -108,5 +126,5 @@ npm test
 | `DATABASE_URL`      | Строка подключения Prisma к PostgreSQL | —                       |
 | `REDIS_URL`         | Строка подключения к Redis             | —                       |
 | `PORT`              | Порт HTTP-сервера                      | `3000`                  |
-| `BASE_URL`          | Базовый URL для результата сокращения  | `http://localhost` |
+| `BASE_URL`          | Базовый URL для результата сокращения  | Docker: `http://localhost`; локально: `http://localhost:3000` |
 | `REDIS_TTL_SECONDS` | TTL URL в Redis                        | `3600`                  |
